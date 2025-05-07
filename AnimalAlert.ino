@@ -4,13 +4,15 @@ ModulinoDistance distance;
 ModulinoBuzzer buzzer;
 ModulinoPixels leds;
 
-ModulinoColor blue(0, 0, 255); // RGB: Blue
+ModulinoColor red(255, 0, 0);
+ModulinoColor yellow(255, 255, 0);
+ModulinoColor green(0, 255, 0);
 
 void setup() {
   Modulino.begin();
   distance.begin();
   buzzer.begin();
-  leds.begin();  // Initialize the LEDs
+  leds.begin();
 }
 
 void loop() {
@@ -18,14 +20,23 @@ void loop() {
     int measure = distance.get(); 
     buzzer.tone(1000, 100);
 
-    // Light up first 8 LEDs with blue color
+    ModulinoColor color = ModulinoColor(0, 0, 0);
+
+    if (measure < 100) {
+      color = red;
+    } else if (measure < 300) {
+      color = yellow;
+    } else {
+      color = green;
+    }
+
+    // Light up all 8 LEDs with the selected color
     for (int i = 0; i < 8; i++) {
-      leds.set(i, blue);
+      leds.set(i, color);
     }
     leds.show();
     delay(200);
 
-    // Turn off LEDs after a short delay
     leds.clear();
     leds.show();
     delay(100);
